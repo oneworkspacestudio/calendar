@@ -1,4 +1,8 @@
-# <img src="web/public/calendar.svg" alt="" width="42" height="42"> My Calendar
+<p align="center">
+  <img src="web/public/calendar.svg" alt="My Calendar logo" width="112" height="112">
+</p>
+
+<h1 align="center">My Calendar</h1>
 
 Your day, together. A familiar calendar for **One Workspace**, with your events stored on your own server.
 
