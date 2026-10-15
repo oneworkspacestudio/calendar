@@ -1,0 +1,9 @@
+dist/
+web/node_modules/
+web/dist/
+*.exe
+*.log
+*.dpapi
+*.sqlite*
+.env*
+!*.example.json

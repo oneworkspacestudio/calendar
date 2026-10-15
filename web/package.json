@@ -1,0 +1,25 @@
+{
+  "name": "@oneworkspace/calendar-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/compile.mjs",
+    "build": "npm run generate && vite build",
+    "dev": "vite --host 127.0.0.1",
+    "test": "node --test test/calendar.test.mjs"
+  },
+  "dependencies": {
+    "@codedia/parser": "0.2.1",
+    "ical.js": "2.2.1",
+    "lucide-react": "1.57.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.1.2",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2",
+    "vite": "8.3.4"
+  }
+}
