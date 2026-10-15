@@ -78,3 +78,36 @@ Do not claim publication until GitHub confirms it. Existing live installations
 were not changed. Demo services are task-owned loopback18998/18999 with synthetic
 NTFS state under C:/Projects/.cache/calendar-check; build logs outside Git under
 H:/Projects. Program/source/artifact storage stays on I:/Projects/my-calendar.
+
+## Publication completed
+
+Source main and annotated SDK tag v0.1.0-preview.1 point to implementation
+commit d28db57. Public unsigned Windows prerelease:
+https://github.com/oneworkspacestudio/calendar/releases/tag/v0.1.0-preview.1
+
+All14 GitHub assets matched local size/SHA256 before publication. Public portable
+ZIP HEAD returned200 after publication. Full portable package SHA256:
+cad756a2925c4837ef450e0dc707b91095e8f31e3f9f72ee6fe4dfa35665b227
+Shared-only package SHA256:
+baec9e593937ed648a73d36d3f9c22454e2efd4313576283eee6c5d0fa36cad4
+Both ZIPs' complete internal manifests were independently checked before upload.
+Assets include separate Calendar/Contacts/Mail/manager EXEs, portable/shared ZIPs,
+exact Calendar/Mail/vendor source ZIPs, notices/licences, source manifest and
+checksums. Stalwart remains separate/unmodified; no new suite installer is shipped.
+
+Mail integration public main48f80639 (implementation83165560 after normal rebase)
+and Workspace integration public main8d934a1 were pushed without force. Their
+new unit suites/Windows builds use the real published SDK (GOWORK=off), with the
+module checksum recorded in go.sum. Final rebased Mail.exe again passed native
+signed OIDC/JMAP application acceptance; closing it retained backend health/PID.
+Calendar unit suite and all8 logic tests pass. Final desktop/month/mobile/Contacts
+screenshots refreshed; mobile selector, composer Save and fullscreen settings
+visually checked. No changes to existing live installations or primary dirty
+checkouts. GitHub Actions remain disabled in all3 public repositories.
+
+Earlier publication-pending section records the checkpoint before these results;
+this section supersedes its remaining publication steps. Source release tag stays
+immutable; later handoff-only commits do not alter released executable source.
+Remaining acceptance boundaries in docs/VERIFICATION.md still apply. Do not
+silently upgrade real installations to the shared preview or infer production
+mail/identity/SCM/reboot/forward-schema acceptance from the synthetic tests.
