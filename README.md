@@ -12,6 +12,10 @@ Move between **day, week, month, year and schedule** views. Create events, add a
 
 Repeating events support changes to one occurrence or the whole series. Time zones and daylight-saving changes are handled in your calendar data. Import or export standard `.ics` files to move your events between calendar apps.
 
+## <img src="web/public/contacts.svg" alt="" width="32" height="32"> Contacts included
+
+Calendar and Contacts each have their own icon and interface in One Workspace.
+
 ## One account. One shared service.
 
 Sign in with **MyAccounts**, the same account used by the rest of your workspace.

@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="8" y="4" width="32" height="40" rx="6" fill="#1a73e8"/><circle cx="24" cy="19" r="7" fill="white"/><path d="M12 39a12 12 0 0 1 24 0" fill="#d3e3fd"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="contacts-title">
+<title id="contacts-title">Contacts</title>
+<defs>
+<linearGradient id="contacts-navy" x1="26" y1="36" x2="201" y2="220" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4B4DD8"/><stop offset="0.48" stop-color="#302B99"/><stop offset="1" stop-color="#1C165E"/></linearGradient>
+<linearGradient id="contacts-pages" x1="207" y1="39" x2="241" y2="208" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F7FAFF"/><stop offset="0.5" stop-color="#D4DCE9"/><stop offset="1" stop-color="#A8B4CA"/></linearGradient>
+<linearGradient id="contacts-person" x1="77" y1="140" x2="157" y2="201" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8AEFD9"/><stop offset="0.42" stop-color="#49D4BA"/><stop offset="1" stop-color="#00A58F"/></linearGradient>
+<linearGradient id="contacts-green-tab" x1="210" y1="86" x2="238" y2="159" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#47D1B5"/><stop offset="1" stop-color="#00A892"/></linearGradient>
+<linearGradient id="contacts-blue-tab" x1="211" y1="162" x2="239" y2="219" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6C80FF"/><stop offset="0.48" stop-color="#455CF3"/><stop offset="1" stop-color="#3029C6"/></linearGradient>
+<linearGradient id="contacts-head" x1="88" y1="72" x2="137" y2="124" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.47" stop-color="#E8EDF5"/><stop offset="1" stop-color="#AAB5C9"/></linearGradient>
+<clipPath id="contacts-tabs-clip"><path d="M207 40H213C228 40 240 52 240 67V191C240 208 228 221 211 221H207Z"/></clipPath>
+</defs>
+<path d="M207 40H213C228 40 240 52 240 67V191C240 208 228 221 211 221H207Z" fill="url(#contacts-pages)"/>
+<g clip-path="url(#contacts-tabs-clip)">
+<rect x="207" y="88" width="34" height="65" rx="0" fill="url(#contacts-green-tab)"/>
+<rect x="207" y="160" width="34" height="64" rx="0" fill="url(#contacts-blue-tab)"/>
+<rect x="207" y="153" width="34" height="6" rx="0" fill="#EAF0F7"/>
+</g>
+<path d="M46 35H197C203 35 207 39 207 45V211C207 217 203 221 197 221H46C29 221 16 208 16 191V65C16 48 29 35 46 35Z" fill="url(#contacts-navy)"/>
+<path d="M211 41V218" fill="none" stroke="#F7F9FD" stroke-width="4" stroke-linecap="round"/>
+<circle cx="111" cy="98" r="30" fill="url(#contacts-head)"/>
+<path d="M55 182C58 151 80 134 111 134C142 134 164 151 167 182C170 196 155 202 111 202C67 202 52 196 55 182Z" fill="url(#contacts-person)"/>
+</svg>

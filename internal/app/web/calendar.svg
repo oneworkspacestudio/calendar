@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><linearGradient id="b" x2="0" y2="1"><stop stop-color="#5798fa"/><stop offset="1" stop-color="#0b57d0"/></linearGradient></defs><rect x="5" y="7" width="38" height="37" rx="8" fill="url(#b)"/><path d="M5 16h38v-1a8 8 0 0 0-8-8H13a8 8 0 0 0-8 8z" fill="#d3e3fd"/><path d="M15 5v9m18-9v9" stroke="#fff" stroke-width="4" stroke-linecap="round"/><text x="24" y="36" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="20" font-weight="500">31</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="calendar-title">
+<title id="calendar-title">Calendar</title>
+<defs>
+<linearGradient id="calendar-body" x1="38" y1="63" x2="215" y2="236" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#332D98"/><stop offset="0.46" stop-color="#241C74"/><stop offset="1" stop-color="#171448"/></linearGradient>
+<linearGradient id="calendar-header" x1="25" y1="35" x2="224" y2="85" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4849DC"/><stop offset="0.55" stop-color="#302C93"/><stop offset="1" stop-color="#24206D"/></linearGradient>
+<linearGradient id="calendar-rings" x1="0" y1="16" x2="0" y2="65" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5677FF"/><stop offset="0.5" stop-color="#8DABFF"/><stop offset="1" stop-color="#CBDCFF"/></linearGradient>
+<linearGradient id="calendar-selected-green" x1="50" y1="108" x2="88" y2="146" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#90F0D8"/><stop offset="0.5" stop-color="#36CEB0"/><stop offset="1" stop-color="#00A38E"/></linearGradient>
+<linearGradient id="calendar-date-grey" x1="0" y1="108" x2="0" y2="201" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#BFC9DA"/><stop offset="0.47" stop-color="#A3AEC5"/><stop offset="1" stop-color="#8590AD"/></linearGradient>
+<linearGradient id="calendar-selected-blue" x1="108" y1="162" x2="147" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9CB4FF"/><stop offset="0.46" stop-color="#6583FF"/><stop offset="1" stop-color="#384DDF"/></linearGradient>
+</defs>
+<rect x="22" y="34" width="212" height="206" rx="34" fill="url(#calendar-body)"/>
+<path d="M56 34H200C219 34 234 49 234 68V84H22V68C22 49 37 34 56 34Z" fill="url(#calendar-header)"/>
+<path d="M23 84H233" fill="none" stroke="#8293FF" stroke-opacity="0.12" stroke-width="1"/>
+<rect x="60" y="16" width="22" height="48" rx="11" fill="url(#calendar-rings)" stroke="#D5E2FF" stroke-opacity="0.3" stroke-width="0.7"/>
+<rect x="170" y="16" width="22" height="48" rx="11" fill="url(#calendar-rings)" stroke="#D5E2FF" stroke-opacity="0.3" stroke-width="0.7"/>
+<rect x="50" y="108" width="38" height="38" rx="8" fill="url(#calendar-selected-green)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+<rect x="108" y="108" width="38" height="38" rx="8" fill="url(#calendar-date-grey)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+<rect x="166" y="108" width="38" height="38" rx="8" fill="url(#calendar-date-grey)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+<rect x="50" y="163" width="38" height="38" rx="8" fill="url(#calendar-date-grey)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+<rect x="108" y="163" width="38" height="38" rx="8" fill="url(#calendar-selected-blue)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+<rect x="166" y="163" width="38" height="38" rx="8" fill="url(#calendar-date-grey)" stroke="#F2F6FF" stroke-opacity="0.17" stroke-width="0.8"/>
+</svg>

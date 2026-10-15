@@ -32,7 +32,7 @@ function App() {
     )
       ? new URLSearchParams(location.search).get("view")
       : "week",
-    kind: "calendar",
+    kind: "",
 
     sidebar: innerWidth > 900,
     showCalendars: true,
@@ -103,6 +103,10 @@ function App() {
     try {
       const info = await fetch(base + "/healthz").then((r) => r.json());
       update({ kind: info.kind });
+      if (base) {
+        const catalog = await fetch('/_workspace/apps').then(r => r.ok ? r.json() : null).catch(() => null);
+        if (catalog?.apps) update({workspaceApps: [{title: 'One Workspace', href: '/'}, ...catalog.apps.map((a: any) => ({title: a.Name, href: a.URL, icon: a.Icon}))]});
+      }
       const session = await api("/api/session");
       csrf.current = session.csrf;
       const preferences = {
@@ -363,13 +367,21 @@ function App() {
         };
       }
     });
+    const visibleContacts = contacts.filter((contact: any) => !state.query || [contact.name, contact.email, contact.phone, contact.company].join(" ").toLocaleLowerCase().includes(state.query.toLocaleLowerCase()));
     const showCalendar = state.mode !== "contacts";
     return {
       ...state,
+      showCalendar,
+      configLoaded: Boolean(state.kind),
+      calendarSearching: showCalendar && state.searching,
+      workspaceHome: base ? "/" : "https://github.com/oneworkspacestudio/one-workspace",
+      searchPlaceholder: showCalendar ? "Search Calendar" : "Search Contacts",
+      syncLabel: showCalendar ? "Syncing your calendar…" : "Syncing your contacts…",
+      storageHint: state.kind === "contacts" ? "Your contacts stay on your own shared Stalwart service." : "Your calendars stay on your own shared Stalwart service.",
       editorOverlay: state.fullEditor
         ? "modal-overlay full-editor"
         : "modal-overlay event-overlay",
-      contacts,
+      contacts: visibleContacts,
       appTitle:
         state.mode === "contacts" || state.kind === "contacts"
           ? "Contacts"
@@ -498,27 +510,9 @@ function App() {
       panelText,
       notesPanel: state.panel === "notes",
       accountPanel: state.panel === "account",
-      appLinks:
-        state.panel === "apps"
-          ? [
-              {
-                title: "My Mail",
-                href: base ? "/mail/" : "http://127.0.0.1:19496/",
-              },
-              {
-                title: "My Calendar",
-                href: base ? "/calendar/" : "http://127.0.0.1:8998/",
-              },
-              {
-                title: "My Contacts",
-                href: base ? "/contacts/" : "http://127.0.0.1:8999/",
-              },
-              {
-                title: "One Workspace",
-                href: "https://github.com/oneworkspacestudio/one-workspace",
-              },
-            ]
-          : [],
+      appLinks: state.panel === "apps" ? (state.workspaceApps || [
+        {title: "Source code", href: "https://github.com/oneworkspacestudio/calendar"}
+      ]) : [],
       callback: location.origin + base + "/auth/callback",
     };
   }, [state]);

@@ -153,6 +153,9 @@ func (a *App) calendars(w http.ResponseWriter, r *http.Request) {
 	result := []DAVItem{}
 	for _, item := range items {
 		if item.IsCalendar {
+			if strings.HasPrefix(item.Name, "Stalwart Calendar (") && strings.Contains(item.Name, s.Subject+"@") {
+				item.Name = "My calendar"
+			}
 			if !strings.HasSuffix(item.Href, "/") {
 				item.Href += "/"
 			}

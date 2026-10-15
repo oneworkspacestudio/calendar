@@ -1,317 +1,335 @@
 Page Calendar data=$model
-  If condition=$setup
-    Card role=setup-card
-      Image src="calendar.svg" alt="My Calendar" width=48
-      Heading level=1 "Set up your workspace"
-      Text "Calendar, Mail and Contacts share one private Stalwart service. You only need to set it up once."
-      Alert tone=error text=$error
-      Input field=issuer label="MyAccounts URL" value=$form.issuer placeholder="https://login.example.com"
-      Input field=clientId label="Shared client ID" value=$form.clientId
-      Input field=clientSecret label="Client secret" type=password value=$form.clientSecret
-      Text role=hint "Register this app's callback in the shared MyAccounts client. Each app's exact callback must be allowed."
-      Text text=$callback
-      Button variant=primary action=setup-save disabled=$busy "Connect Calendar"
-  Else
-    Section role=app-root
-      If condition=$signedIn
-        Row role=header
-          Button icon=menu title="Main menu" action=toggle-sidebar
-          Row role=brand
-            Image src=$appIcon alt=$appTitle width=36
-            Text role=brand-title text=$appTitle
-          Button role=today action=today "Today"
-          Button icon=chevron-left title="Previous period" action=previous
-          Button icon=chevron-right title="Next period" action=next
-          Text role=period text=$period
-          Spacer
-          If condition=$searching
-            Input role=search field=query placeholder="Search Calendar" value=$query
-            Button icon=x title="Close search" action=close-search
-          Else
-            Button icon=search title=Search action=search
-          Button icon=circle-help title=Support action=help
-          Button icon=settings title=Settings action=settings
-          Select role=view field=view value=$view options=$viewOptions label="Calendar view"
-          Row role=mode-switch
-            Button icon=calendar-days title="Switch to Calendar" action=calendar-mode selected=$calendarMode
-            Button icon=circle-check title="Switch to Tasks" action=tasks-mode selected=$tasksMode
-          Button icon=grid-3x3 title="Workspace apps" action=apps
-          Button role=avatar title="Your account" action=account text=$initial
-        Row role=workspace
-          If condition=$sidebar
-            Stack role=sidebar
-              Button role=create icon=plus action=toggle-create "Create"
-                Icon name=chevron-down
-              If condition=$createMenu
-                Card role=create-menu
-                  Button action=create "Event"
-                  Button action=create-task "Task"
-                  Button action=create-appointment "Appointment schedule"
-              Row role=mini-title
-                Text text=$miniTitle
-                Spacer
-                Button icon=chevron-left title="Previous month" action=mini-previous
-                Button icon=chevron-right title="Next month" action=mini-next
-              Grid role=mini-weekdays cols=7
-                For each=$weekdayLetters
-                  Text text=$item
-              Grid role=mini-grid cols=7
-                For each=$miniDays
-                  Button role=mini-date datum=$item text=$item.day selected=$item.selected muted=$item.muted today=$item.today
-              Input role=people icon=users field=query placeholder="Search for people" value=$query
-              Button role=sidebar-row icon=plus action=booking "Booking pages"
-              Button role=sidebar-heading action=toggle-calendars "My calendars"
-                Icon name=chevron-up
-              If condition=$showCalendars
-                Section role=conditional-group
-                  For each=$calendars
-                    Checkbox role=calendar-check datum=$item label=$item.name checked=$item.visible color=$item.color
-              Button role=sidebar-heading action=new-calendar "Other calendars"
-                Icon name=plus
-              If condition=$demo
-                Text role=demo-note "Demo · sample events only"
+  If condition=$configLoaded
+    Section role=app-bootstrap
+      If condition=$setup
+        Card role=setup-card
+          Image src="calendar.svg" alt="My Calendar" width=48
+          Heading level=1 "Set up your workspace"
+          Text "Calendar, Mail and Contacts share one private Stalwart service. You only need to set it up once."
+          Alert tone=error text=$error
+          Input field=issuer label="MyAccounts URL" value=$form.issuer placeholder="https://login.example.com"
+          Input field=clientId label="Shared client ID" value=$form.clientId
+          Input field=clientSecret label="Client secret" type=password value=$form.clientSecret
+          Text role=hint "Register this app's callback in the shared MyAccounts client. Each app's exact callback must be allowed."
+          Text text=$callback
+          Button variant=primary action=setup-save disabled=$busy "Connect Calendar"
+      Else
+        Section role=app-root
+          If condition=$signedIn
+            Row role=header
+              Button icon=menu title="Main menu" action=toggle-sidebar
+              Row role=brand
+                Image src=$appIcon alt=$appTitle width=36
+                Text role=brand-title text=$appTitle
+              If condition=$showCalendar
+                Button role=today action=today "Today"
+                Button icon=chevron-left title="Previous period" action=previous
+                Button icon=chevron-right title="Next period" action=next
+                Text role=period text=$period
               Spacer
-              Row role=sidebar-footer
-                Link href="https://github.com/oneworkspacestudio/calendar" "One Workspace"
-                Button action=service-status "Service status"
-          Section role=calendar-surface
-            If condition=$error
-              Alert tone=error text=$error
-                Button action=refresh "Retry"
-            If condition=$busy
-              Text role=loading "Syncing your calendar…"
-            If condition=$searching
-              Section role=agenda
-                Heading level=2 "Search results"
-                For each=$agenda
-                  Button role=agenda-event datum=$item
-                    Text role=agenda-date text=$item.dayLabel
-                    Text role=agenda-time text=$item.timeLabel
-                    Icon name=circle color=$item.color
-                    Text text=$item.title
-                If condition=$empty
-                  Text role=empty "No matching events"
-            Else
-              If condition=$weekView
-                Grid role=day-headings cols=$columnCount
-                  Text role=timezone text=$timezoneLabel
-                  For each=$days
-                    Button role=day-heading datum=$item today=$item.today
-                      Text role=day-label text=$item.label
-                      Text role=day-number text=$item.number
-                Grid role=all-day-row cols=$columnCount
-                  Text role=timezone "all-day"
-                  For each=$days
-                    Section role=all-day-column datum=$item
-                      For each=$item.allDay
-                        Button role=all-day-event datum=$item color=$item.color text=$item.title
-                Section role=time-scroll
-                  Grid role=time-grid cols=$columnCount
-                    Stack role=hour-labels
-                      For each=$hours
-                        Text role=hour-label text=$item
-                    For each=$days
-                      Section role=day-column datum=$item
-                        For each=$item.events
-                          Section role=event datum=$item color=$item.color
-                            Button role=event-body datum=$item
-                              Text role=event-title text=$item.title
-                              Text role=event-time text=$item.timeLabel
-                            Button role=resize-handle datum=$item title="Resize event"
-                        If condition=$item.showNow
-                          Section role=now-line datum=$item
-              If condition=$monthView
-                Grid role=month-weekdays cols=$monthColumns
-                  For each=$weekdayNames
-                    Text text=$item
-                Grid role=month-grid cols=$monthColumns
-                  For each=$monthDays
-                    Section role=month-cell datum=$item muted=$item.muted
-                      Button role=month-number datum=$item today=$item.today text=$item.number
-                      For each=$item.allEvents
-                        Button role=month-event datum=$item color=$item.color
-                          Text role=month-time text=$item.shortTime
-                          Text text=$item.title
-              If condition=$yearView
-                Grid role=year-grid cols=3
-                  For each=$yearMonths
-                    Section role=year-month
-                      Heading level=3 text=$item.title
-                      Grid role=mini-weekdays cols=7
-                        For each=$weekdayLetters
-                          Text text=$item
-                      Grid role=mini-grid cols=7
-                        For each=$item.days
-                          Button role=mini-date datum=$item text=$item.day today=$item.today muted=$item.muted
-              If condition=$scheduleView
-                Section role=agenda
-                  For each=$agenda
-                    Button role=agenda-event datum=$item
-                      Text role=agenda-date text=$item.dayLabel
-                      Text role=agenda-time text=$item.timeLabel
-                      Icon name=circle color=$item.color
-                      Text text=$item.title
-                  If condition=$empty
-                    Text role=empty "No events to show. Create an event to get started."
-              If condition=$contactsMode
-                Section role=contacts
-                  Row
-                    Heading level=1 "Contacts"
-                    Spacer
-                    Button variant=primary icon=plus action=create-contact "Create contact"
-                  For each=$contacts
-                    Button role=contact-row datum=$item
-                      Text role=contact-avatar text=$item.initial
-                      Text text=$item.name
-                      Text text=$item.email
-                      Text text=$item.phone
-          Stack role=right-rail
-            Button icon=sticky-note title=Notes action=notes
-            Button icon=circle-check title=Tasks action=tasks-mode
-            Button icon=contact-round title=Contacts action=contacts
-            Divider
-            Button icon=plus title="Add to your workspace" action=apps
-            Spacer
-            Button icon=chevron-right title="Hide side panel" action=toggle-rail
-        If condition=$editing
-          Section role=$editorOverlay
-            Card role=event-dialog
-              Row role=dialog-toolbar
-                Spacer
-                If condition=$existing
-                  Button icon=trash-2 title="Delete event" action=delete-event
-                Button icon=x title="Close editor" action=close-editor
-              Input role=event-title-input field=title placeholder="Add title" value=$form.title
-              Row role=event-types
-                Button action=type-event selected=$eventType "Event"
-                Button action=type-task selected=$taskType "Task"
-                Button action=type-appointment selected=$appointmentType "Appointment schedule"
-              If condition=$taskType
-                Checkbox field=completed label=Completed checked=$form.completed
-              Row role=form-row
-                Icon name=clock
-                Input field=startDate type=date value=$form.startDate label="Start date"
-                Input field=startTime type=time value=$form.startTime label="Start time" disabled=$form.allDay
-                Text "–"
-                Input field=endTime type=time value=$form.endTime label="End time" disabled=$form.allDay
-              Row role=advanced-indent
-                Checkbox field=allDay label="All day" checked=$form.allDay
-                Input field=endDate type=date value=$form.endDate label="End date"
-              Row role=form-indent
-                Select field=recurrence label=Repeat value=$form.recurrence options=$repeatOptions
-                If condition=$repeating
-                  Select field=scope label="Edit repeating event" value=$form.scope options=$scopeOptions
-              Row role=advanced-row
-                Icon name=globe
-                Select field=timezone label="Time zone" value=$form.timezone options=$timezones
-              Row role=form-row
-                Icon name=users
-                Input field=guests placeholder="Add guests" value=$form.guests label=Guests
-              Row role=form-row
-                Icon name=video
-                Input field=meetingUrl placeholder="Add video conferencing" value=$form.meetingUrl label="Video conference URL"
-              Row role=form-row
-                Icon name=map-pin
-                Input field=location placeholder="Add location" value=$form.location label=Location
-              Row role=advanced-row
-                Icon name=bell
-                Select field=reminder label=Notification value=$form.reminder options=$reminderOptions
-              Row role=form-row
-                Icon name=align-left
-                Input field=description multiline=true placeholder="Add description or a Drive attachment" value=$form.description label=Description
-              Row role=form-row
-                Icon name=calendar-days
-                Select field=calendar label=Calendar value=$form.calendar options=$calendarOptions disabled=$existing
-                Select field=availability label="Show as" value=$form.availability options=$availabilityOptions
-                Select field=visibility label=Visibility value=$form.visibility options=$visibilityOptions
-              If condition=$error
-                Alert tone=error text=$error
-              Row role=dialog-footer
-                If condition=$repeating
-                  Text role=hint "Choose whether to update this occurrence or the entire series."
-                Spacer
-                Button role=more-options action=more-options "More options"
-                Button role=editor-cancel action=close-editor "Cancel"
-                Button variant=primary action=save-event disabled=$busy "Save"
-        If condition=$contactEditing
-          Section role=modal-overlay
-            Card role=contact-dialog
-              Row
-                Heading level=2 "Contact"
-                Spacer
-                Button icon=x title="Close contact" action=close-contact
-              Input field=name label=Name value=$form.name
-              Input field=email label=Email type=email value=$form.email
-              Input field=phone label=Phone type=tel value=$form.phone
-              Input field=company label=Company value=$form.company
-              Row
-                If condition=$existing
-                  Button variant=danger action=delete-contact "Delete"
-                Spacer
-                Button variant=primary action=save-contact "Save"
-        If condition=$settingsOpen
-          Section role=settings-overlay
-            Card role=settings-dialog
-              Row role=settings-header
-                Button icon=arrow-left title="Back to calendar" action=close-settings
-                Heading level=1 "Settings"
-                Spacer
-                Button variant=primary action=save-settings "Save settings"
-              Row role=settings-body
-                Stack role=settings-navigation
-                  Text role=settings-nav-title "General"
-                  Button action=settings-timezone "Time zone"
-                  Button action=settings-events "Event settings"
-                  Button action=settings-view "View options"
-                  Button action=settings-import "Import & export"
+              If condition=$searching
+                Input role=search field=query placeholder=$searchPlaceholder value=$query
+                Button icon=x title="Close search" action=close-search
+              Else
+                Button icon=search title=Search action=search
+              Button icon=circle-help title=Support action=help
+              If condition=$showCalendar
+                Button icon=settings title=Settings action=settings
+              If condition=$showCalendar
+                Select role=view field=view value=$view options=$viewOptions label="Calendar view"
+                Row role=mode-switch
+                  Button icon=calendar-days title="Switch to Calendar" action=calendar-mode selected=$calendarMode
+                  Button icon=circle-check title="Switch to Tasks" action=tasks-mode selected=$tasksMode
+              Button icon=grid-3x3 title="Workspace apps" action=apps
+              Button role=avatar title="Your account" action=account text=$initial
+            Row role=workspace
+              If condition=$sidebar
+                Stack role=sidebar
+                  If condition=$showCalendar
+                    Button role=create icon=plus action=toggle-create "Create"
+                      Icon name=chevron-down
+                    If condition=$createMenu
+                      Card role=create-menu
+                        Button action=create "Event"
+                        Button action=create-task "Task"
+                        Button action=create-appointment "Appointment schedule"
+                    Row role=mini-title
+                      Text text=$miniTitle
+                      Spacer
+                      Button icon=chevron-left title="Previous month" action=mini-previous
+                      Button icon=chevron-right title="Next month" action=mini-next
+                    Grid role=mini-weekdays cols=7
+                      For each=$weekdayLetters
+                        Text text=$item
+                    Grid role=mini-grid cols=7
+                      For each=$miniDays
+                        Button role=mini-date datum=$item text=$item.day selected=$item.selected muted=$item.muted today=$item.today
+                  If condition=$contactsMode
+                    Button role=create icon=plus action=create-contact "Create contact"
+                    Text role=hint "Your contacts"
+                  Input role=people icon=users field=query placeholder="Search for people" value=$query
+                  If condition=$showCalendar
+                    Button role=sidebar-row icon=plus action=booking "Booking pages"
+                    Button role=sidebar-heading action=toggle-calendars "My calendars"
+                      Icon name=chevron-up
+                    If condition=$showCalendars
+                      Section role=conditional-group
+                        For each=$calendars
+                          Checkbox role=calendar-check datum=$item label=$item.name checked=$item.visible color=$item.color
+                    Button role=sidebar-heading action=new-calendar "Other calendars"
+                      Icon name=plus
+                  If condition=$demo
+                    Text role=demo-note "Demo · sample events only"
                   Spacer
-                  Link href="https://github.com/oneworkspacestudio/calendar" "One Workspace"
-                Stack role=settings-content
-                  Section role=timezone-settings
-                    Heading level=2 "Time zone"
-                    Text role=hint "Your calendar uses this time zone to display event times."
-                    Input field=timezone label="Primary time zone" value=$form.timezone
-                  Section role=event-settings
-                    Heading level=2 "Event settings"
-                    Select field=eventDuration label="Default event duration" value=$form.eventDuration options=$durationOptions
-                    Select field=defaultReminder label="Default notification" value=$form.defaultReminder options=$reminderOptions
-                    Button action=notifications "Enable desktop notifications"
-                  Section role=view-settings
-                    Heading level=2 "View options"
-                    Select field=weekStart label="Start week on" value=$form.weekStart options=$weekStartOptions
-                    Checkbox field=weekends label="Show weekends" checked=$form.weekends
-                    Checkbox field=dark label="Dark appearance" checked=$form.dark
-                  Section role=import-settings
-                    Heading level=2 "Import & export"
-                    Text role=hint "Import a standard iCalendar file from Google Calendar or another calendar app. Your events are saved in your shared Stalwart data folder."
-                    Row
-                      Button action=import "Import .ics"
-                      Button action=export "Export calendar"
+                  Row role=sidebar-footer
+                    Link href=$workspaceHome "One Workspace"
+                    Button action=service-status "Service status"
+              Section role=calendar-surface
+                If condition=$error
+                  Alert tone=error text=$error
+                    Button action=refresh "Retry"
+                If condition=$busy
+                  Text role=loading text=$syncLabel
+                If condition=$calendarSearching
+                  Section role=agenda
+                    Heading level=2 "Search results"
+                    For each=$agenda
+                      Button role=agenda-event datum=$item
+                        Text role=agenda-date text=$item.dayLabel
+                        Text role=agenda-time text=$item.timeLabel
+                        Icon name=circle color=$item.color
+                        Text text=$item.title
+                    If condition=$empty
+                      Text role=empty "No matching events"
+                Else
+                  If condition=$weekView
+                    Grid role=day-headings cols=$columnCount
+                      Text role=timezone text=$timezoneLabel
+                      For each=$days
+                        Button role=day-heading datum=$item today=$item.today
+                          Text role=day-label text=$item.label
+                          Text role=day-number text=$item.number
+                    Grid role=all-day-row cols=$columnCount
+                      Text role=timezone "all-day"
+                      For each=$days
+                        Section role=all-day-column datum=$item
+                          For each=$item.allDay
+                            Button role=all-day-event datum=$item color=$item.color text=$item.title
+                    Section role=time-scroll
+                      Grid role=time-grid cols=$columnCount
+                        Stack role=hour-labels
+                          For each=$hours
+                            Text role=hour-label text=$item
+                        For each=$days
+                          Section role=day-column datum=$item
+                            For each=$item.events
+                              Section role=event datum=$item color=$item.color
+                                Button role=event-body datum=$item
+                                  Text role=event-title text=$item.title
+                                  Text role=event-time text=$item.timeLabel
+                                Button role=resize-handle datum=$item title="Resize event"
+                            If condition=$item.showNow
+                              Section role=now-line datum=$item
+                  If condition=$monthView
+                    Grid role=month-weekdays cols=$monthColumns
+                      For each=$weekdayNames
+                        Text text=$item
+                    Grid role=month-grid cols=$monthColumns
+                      For each=$monthDays
+                        Section role=month-cell datum=$item muted=$item.muted
+                          Button role=month-number datum=$item today=$item.today text=$item.number
+                          For each=$item.allEvents
+                            Button role=month-event datum=$item color=$item.color
+                              Text role=month-time text=$item.shortTime
+                              Text text=$item.title
+                  If condition=$yearView
+                    Grid role=year-grid cols=3
+                      For each=$yearMonths
+                        Section role=year-month
+                          Heading level=3 text=$item.title
+                          Grid role=mini-weekdays cols=7
+                            For each=$weekdayLetters
+                              Text text=$item
+                          Grid role=mini-grid cols=7
+                            For each=$item.days
+                              Button role=mini-date datum=$item text=$item.day today=$item.today muted=$item.muted
+                  If condition=$scheduleView
+                    Section role=agenda
+                      For each=$agenda
+                        Button role=agenda-event datum=$item
+                          Text role=agenda-date text=$item.dayLabel
+                          Text role=agenda-time text=$item.timeLabel
+                          Icon name=circle color=$item.color
+                          Text text=$item.title
+                      If condition=$empty
+                        Text role=empty "No events to show. Create an event to get started."
+                  If condition=$contactsMode
+                    Section role=contacts
+                      Row
+                        Heading level=1 "Contacts"
+                        Spacer
+                        Button variant=primary icon=plus action=create-contact "Create contact"
+                      For each=$contacts
+                        Button role=contact-row datum=$item
+                          Text role=contact-avatar text=$item.initial
+                          Text text=$item.name
+                          Text text=$item.email
+                          Text text=$item.phone
+              If condition=$showCalendar
+                Stack role=right-rail
+                  Button icon=sticky-note title=Notes action=notes
+                  Button icon=circle-check title=Tasks action=tasks-mode
+                  Button icon=contact-round title=Contacts action=contacts
+                  Divider
+                  Button icon=plus title="Add to your workspace" action=apps
+                  Spacer
+                  Button icon=chevron-right title="Hide side panel" action=toggle-rail
+            If condition=$editing
+              Section role=$editorOverlay
+                Card role=event-dialog
+                  Row role=dialog-toolbar
+                    Spacer
+                    If condition=$existing
+                      Button icon=trash-2 title="Delete event" action=delete-event
+                    Button icon=x title="Close editor" action=close-editor
+                  Input role=event-title-input field=title placeholder="Add title" value=$form.title
+                  Row role=event-types
+                    Button action=type-event selected=$eventType "Event"
+                    Button action=type-task selected=$taskType "Task"
+                    Button action=type-appointment selected=$appointmentType "Appointment schedule"
+                  If condition=$taskType
+                    Checkbox field=completed label=Completed checked=$form.completed
+                  Row role=form-row
+                    Icon name=clock
+                    Input field=startDate type=date value=$form.startDate label="Start date"
+                    Input field=startTime type=time value=$form.startTime label="Start time" disabled=$form.allDay
+                    Text "–"
+                    Input field=endTime type=time value=$form.endTime label="End time" disabled=$form.allDay
+                  Row role=advanced-indent
+                    Checkbox field=allDay label="All day" checked=$form.allDay
+                    Input field=endDate type=date value=$form.endDate label="End date"
+                  Row role=form-indent
+                    Select field=recurrence label=Repeat value=$form.recurrence options=$repeatOptions
+                    If condition=$repeating
+                      Select field=scope label="Edit repeating event" value=$form.scope options=$scopeOptions
+                  Row role=advanced-row
+                    Icon name=globe
+                    Select field=timezone label="Time zone" value=$form.timezone options=$timezones
+                  Row role=form-row
+                    Icon name=users
+                    Input field=guests placeholder="Add guests" value=$form.guests label=Guests
+                  Row role=form-row
+                    Icon name=video
+                    Input field=meetingUrl placeholder="Add video conferencing" value=$form.meetingUrl label="Video conference URL"
+                  Row role=form-row
+                    Icon name=map-pin
+                    Input field=location placeholder="Add location" value=$form.location label=Location
+                  Row role=advanced-row
+                    Icon name=bell
+                    Select field=reminder label=Notification value=$form.reminder options=$reminderOptions
+                  Row role=form-row
+                    Icon name=align-left
+                    Input field=description multiline=true placeholder="Add description or a Drive attachment" value=$form.description label=Description
+                  Row role=form-row
+                    Icon name=calendar-days
+                    Select field=calendar label=Calendar value=$form.calendar options=$calendarOptions disabled=$existing
+                    Select field=availability label="Show as" value=$form.availability options=$availabilityOptions
+                    Select field=visibility label=Visibility value=$form.visibility options=$visibilityOptions
                   If condition=$error
                     Alert tone=error text=$error
-        If condition=$panel
-          Section role=modal-overlay
-            Card role=info-dialog
-              Row
-                Heading level=2 text=$panelTitle
-                Spacer
-                Button icon=x title=Close action=close-panel
-              Text role=panel-copy text=$panelText
-              If condition=$notesPanel
-                Input field=note multiline=true label="Your note" value=$form.note
-                Button variant=primary action=save-notes "Save note"
-              If condition=$accountPanel
-                Button action=signout "Sign out"
-              For each=$appLinks
-                Link href=$item.href text=$item.title
-        If condition=$demo
-          Text role=demo-badge "Demo"
-        If condition=$toast
-          Alert role=toast tone=success text=$toast
-      Else
-        Card role=login-card
-          Image src=$appIcon alt=$appTitle width=56
-          Heading level=1 text=$loginTitle
-          Text text=$loginDescription
-          Link role=signin href="auth/login" "Sign in with MyAccounts"
-          Text role=hint "Your calendars stay on your own shared Stalwart service."
+                  Row role=dialog-footer
+                    If condition=$repeating
+                      Text role=hint "Choose whether to update this occurrence or the entire series."
+                    Spacer
+                    Button role=more-options action=more-options "More options"
+                    Button role=editor-cancel action=close-editor "Cancel"
+                    Button variant=primary action=save-event disabled=$busy "Save"
+            If condition=$contactEditing
+              Section role=modal-overlay
+                Card role=contact-dialog
+                  Row
+                    Heading level=2 "Contact"
+                    Spacer
+                    Button icon=x title="Close contact" action=close-contact
+                  Input field=name label=Name value=$form.name
+                  Input field=email label=Email type=email value=$form.email
+                  Input field=phone label=Phone type=tel value=$form.phone
+                  Input field=company label=Company value=$form.company
+                  Row
+                    If condition=$existing
+                      Button variant=danger action=delete-contact "Delete"
+                    Spacer
+                    Button variant=primary action=save-contact "Save"
+            If condition=$settingsOpen
+              Section role=settings-overlay
+                Card role=settings-dialog
+                  Row role=settings-header
+                    Button icon=arrow-left title="Back to calendar" action=close-settings
+                    Heading level=1 "Settings"
+                    Spacer
+                    Button variant=primary action=save-settings "Save settings"
+                  Row role=settings-body
+                    Stack role=settings-navigation
+                      Text role=settings-nav-title "General"
+                      Button action=settings-timezone "Time zone"
+                      Button action=settings-events "Event settings"
+                      Button action=settings-view "View options"
+                      Button action=settings-import "Import & export"
+                      Spacer
+                      Link href=$workspaceHome "One Workspace"
+                    Stack role=settings-content
+                      Section role=timezone-settings
+                        Heading level=2 "Time zone"
+                        Text role=hint "Your calendar uses this time zone to display event times."
+                        Input field=timezone label="Primary time zone" value=$form.timezone
+                      Section role=event-settings
+                        Heading level=2 "Event settings"
+                        Select field=eventDuration label="Default event duration" value=$form.eventDuration options=$durationOptions
+                        Select field=defaultReminder label="Default notification" value=$form.defaultReminder options=$reminderOptions
+                        Button action=notifications "Enable desktop notifications"
+                      Section role=view-settings
+                        Heading level=2 "View options"
+                        Select field=weekStart label="Start week on" value=$form.weekStart options=$weekStartOptions
+                        Checkbox field=weekends label="Show weekends" checked=$form.weekends
+                        Checkbox field=dark label="Dark appearance" checked=$form.dark
+                      Section role=import-settings
+                        Heading level=2 "Import & export"
+                        Text role=hint "Import a standard iCalendar file from Google Calendar or another calendar app. Your events are saved in your shared Stalwart data folder."
+                        Row
+                          Button action=import "Import .ics"
+                          Button action=export "Export calendar"
+                      If condition=$error
+                        Alert tone=error text=$error
+            If condition=$panel
+              Section role=modal-overlay
+                Card role=info-dialog
+                  Row
+                    Heading level=2 text=$panelTitle
+                    Spacer
+                    Button icon=x title=Close action=close-panel
+                  Text role=panel-copy text=$panelText
+                  If condition=$notesPanel
+                    Input field=note multiline=true label="Your note" value=$form.note
+                    Button variant=primary action=save-notes "Save note"
+                  If condition=$accountPanel
+                    Button action=signout "Sign out"
+                  For each=$appLinks
+                    Link href=$item.href
+                      If condition=$item.icon
+                        Image src=$item.icon alt="" width=24
+                      Text text=$item.title
+            If condition=$demo
+              Text role=demo-badge "Demo"
+            If condition=$toast
+              Alert role=toast tone=success text=$toast
+          Else
+            Card role=login-card
+              Image src=$appIcon alt=$appTitle width=56
+              Heading level=1 text=$loginTitle
+              Text text=$loginDescription
+              Link role=signin href="auth/login" "Sign in with MyAccounts"
+              Text role=hint text=$storageHint
+  Else
+    Card role=login-card
+      Heading level=1 "Opening your workspace"
+      Text "Loading your application…"
