@@ -25,3 +25,12 @@ User now explicitly requested push and release without GitHub Actions. Preparing
 The coordinated manager release is One Workspace `v0.3.0-preview.38`. Check the
 GitHub release assets and tag before claiming publication complete. Prior review
 limitations remain unchanged.
+
+## Published release
+
+Published [v0.1.0-preview.3](https://github.com/oneworkspacestudio/calendar/releases/tag/v0.1.0-preview.3) from `f683add9fd4e8cfdb7ff71a2bfa1cca55726a691`.
+All release asset sizes/SHA256 matched the local packages before publication;
+the public anonymous Windows ZIP download was separately hashed successfully.
+Actions remain disabled. Source and native packages were built locally. Matching
+Workspace preview.38 pins include this exact release. Prior product/acceptance
+limits above remain; owner installation and data were not changed.
