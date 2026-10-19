@@ -19,6 +19,10 @@ import { CalendarScreen } from "./Calendar.generated";
 import { UIContext } from "./components/ui";
 import "./styles.css";
 const base = new URL("./", location.href).pathname.replace(/\/$/, "");
+function workspaceTheme() {
+  try { const value = localStorage.getItem("workspace-theme"); return value === "dark" ? true : value === "light" ? false : undefined; }
+  catch { return undefined; }
+}
 function App() {
   const [state, set] = useState<any>({
     date: /^\d{4}-\d{2}-\d{2}$/.test(
@@ -59,13 +63,19 @@ function App() {
       weekStart: "1",
       weekends: true,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      dark: false,
+      dark: workspaceTheme() ?? false,
       eventDuration: "60",
       defaultReminder: "10",
     },
   });
   const stateRef = useRef(state);
   stateRef.current = state;
+  useEffect(() => {
+    const contacts = state.kind === "contacts" || state.mode === "contacts";
+    document.title = (contacts ? "Contacts" : "Calendar") + " · One Workspace";
+    const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (favicon) favicon.href = base + (contacts ? "/contacts.svg" : "/calendar.svg");
+  }, [state.kind, state.mode]);
   const csrf = useRef("");
   const announced = useRef(new Set<string>());
   const update = (v: any) =>
@@ -113,6 +123,7 @@ function App() {
         ...stateRef.current.preferences,
         ...(await api("/api/preferences")),
       };
+      preferences.dark = workspaceTheme() ?? preferences.dark;
       const calendars = (await api("/api/calendars")).map((c: any) => ({
         ...c,
         visible:
@@ -520,12 +531,18 @@ function App() {
   modelRef.current = model;
   useEffect(() => {
     document.documentElement.classList.toggle("dark", !!state.preferences.dark);
+    document.documentElement.dataset.theme = state.preferences.dark ? "dark" : "light";
     const timer = setTimeout(() => {
       const el = document.querySelector(".time-scroll");
       if (el && el.scrollTop === 0) el.scrollTop = 7 * 48;
     }, 30);
     return () => clearTimeout(timer);
   }, [state.view, state.signedIn, state.preferences.dark]);
+  useEffect(() => {
+    const sync = (e: StorageEvent) => { if(e.key === "workspace-theme") update((s: any) => ({preferences: {...s.preferences, dark: e.newValue === "dark"}})); };
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, []);
   useEffect(() => {
     const timer = setInterval(() => update({ clock: Date.now() }), 60000);
     return () => clearInterval(timer);
@@ -1054,6 +1071,7 @@ function App() {
             body: JSON.stringify(preferences),
           });
           update({ preferences, settingsOpen: false });
+          try { localStorage.setItem("workspace-theme", preferences.dark ? "dark" : "light"); } catch {}
           notice("Settings saved");
           break;
         }
@@ -1104,10 +1122,13 @@ function App() {
           break;
         case "help":
         case "account":
-        case "apps":
         case "booking":
         case "notes":
           update({ panel: action, form: { note: s.preferences.note || "" } });
+          break;
+        case "apps":
+          if (document.documentElement.dataset.workspaceNavigation === "ready") window.dispatchEvent(new Event("workspace:open-apps"));
+          else update({ panel: "apps" });
           break;
         case "save-notes": {
           const preferences = { ...s.preferences, note: s.form.note };

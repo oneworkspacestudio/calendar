@@ -1,4 +1,4 @@
-param([string]$Go='go',[string]$Version='0.1.0-preview.1',[string]$EngineArchive='')
+param([string]$Go='go',[string]$Version='0.1.0-preview.3',[string]$EngineArchive='')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $expected='5f8370b259330e9eba65ed21bd59af92cfecd9597aea17594d803ec68b4bc291'
